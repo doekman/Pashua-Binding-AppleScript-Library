@@ -1,0 +1,8 @@
+# Add a text field
+tf.type = textfield
+tf.label = Example textfield
+tf.default = Textfield content
+tf.width = 310
+tf.tooltip = This is an element of type “textfield”
+cb.type = cancelbutton
+cb.label = Not Okay
