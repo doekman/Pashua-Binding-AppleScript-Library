@@ -1,0 +1,5 @@
+# AppleScript "binaries"
+*.scpt
+*.scptd
+* (Autosaved).*
+build/
