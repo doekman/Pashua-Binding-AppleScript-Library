@@ -1,0 +1,12 @@
+# Pashua dialog config
+name.type = textfield
+name.label = First & Last Name
+email.type = textfield
+email.label = Email Address
+dob.type = date
+dob.label = Date of Birth
+dob.textual = 1
+agree.type = checkbox
+agree.label = Do You Agree Evading Your Privacy?
+cb.type = cancelbutton
+db.type = defaultbutton

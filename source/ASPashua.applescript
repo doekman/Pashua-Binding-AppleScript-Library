@@ -34,7 +34,7 @@ on «event PASHDIDI» config
 	end if
 	
 	-- Call pashua
-	set pashua_res to do shell script pashua_cmd
+	set pashua_res to do_shell_with_log("display pashua dialog", pashua_cmd)
 	
 	set result_lines to split_string(pashua_res, return)
 	
