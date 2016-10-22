@@ -5,8 +5,8 @@ use framework "Foundation"
 global pashua_binary
 global log_to_file
 
---| set pashua path
-on «event PASHSPPH» new_path
+--| custom pashua location
+on «event PASHCMPL» new_path
 	global pashua_path
 	
 	tell application "Finder"
@@ -16,7 +16,7 @@ on «event PASHSPPH» new_path
 	end tell
 	init_library_stuff()
 	set pashua_binary to (POSIX path of new_path) & "Contents/MacOS/Pashua"
-end «event PASHSPPH»
+end «event PASHCMPL»
 
 
 --| display pashua dialog

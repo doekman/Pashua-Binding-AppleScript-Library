@@ -9,7 +9,7 @@
 			</direct-parameter>
 			<result description="The dialog result, parsed as an AppleScript record. When the user cancels the dialog, an error is raised (number -128, User canceled). An error will also be raised when Pashua.app can&apos;t parse the config (number 1001)." type="record"/>
 		</command>
-		<command name="set pashua path" code="PASHSPPH" description="Used to set a custom location of the Pashua.app">
+		<command name="custom pashua location" code="PASHCMPL" description="Used to set a custom location of the Pashua.app">
 			<direct-parameter description="The alias pointing to the Pashua.app package." type="file"/>
 		</command>
 	</suite>
