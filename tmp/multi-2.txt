@@ -1,0 +1,47 @@
+simpel
+------
+display multi dialog "Geef a.u.b. antwoord op de volgende vragen" question labels {"Voor- en achternaam", "E-mailadres"}
+
+
+met waarden
+-----------
+display multi dialog "Geef a.u.b. antwoord op de volgende vragen" question labels {"Voor- en achternaam", "Verjaardag", "Gaat u akkoord met de voorwaarden?"} default answers {"", current date, false}
+
+
+element types opgeven
+---------------------
+display multi dialog "Geef a.u.b. antwoord op de volgende vragen" question labels {"Voor- en achternaam", "Verjaardag", "Gaat u akkoord met de voorwaarden?"} default answers {"", current date, "Nee"} element types {mandatory textfield, date, radiobutton} options { {"Nee", "Ja"}}
+
+
+display multi dialog: text
+  question labels: list of text
+  default answers:list of any (text,boolean,date,file,alias)
+  element types:list of element type [optional, auto infered]
+  options: list of list of text [options for combobox/popup/radiobutton]
+
+element type: enumeration (*graphical or textual)
+  checkbox
+  combobox
+  mandatory combobox
+  date*
+  time*
+  datetime*
+  openbrowser
+  mandatory openbrowser
+  password
+  mandatory password
+  popup
+  mandatory popup
+  radiobutton
+  mandatory radiobutton
+  savebrowser
+  mandatory savebrowser
+  textbox
+  mandatory textbox
+  textfield
+  mandatory textfield
+
+dialog reply: record
+  button returned: text
+  values returned: list of any
+  gave up: integer

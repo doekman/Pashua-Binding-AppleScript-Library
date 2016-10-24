@@ -50,17 +50,51 @@ on «event PASHDIDI» config
 	
 end «event PASHDIDI»
 
+--| display multi dialog
+on «event PASHDIMD» introductionText given «class Qsnl»:questionLabels : missing value, «class Wttl»:titleText : missing value
+	set configLines to {}
+	if introductionText is not missing value then
+		set configLines to configLines & {"intro.type = text", "intro.text = " & replace_text(linefeed, "[return]", introductionText)}
+	end if
+	if questionLabels is missing value then
+		set questionLabels to {}
+	end if
+	if titleText is not missing value then
+		set configLines to configLines & {"*.title = " & titleText}
+	end if
+	set inferedElementTypes to inferElementTypes(questionLabels)
+	appendFieldsToConfig(configLines, questionLabels, inferedElementTypes)
+	return «event PASHDIDI» join_list(configLines, linefeed)
+end «event PASHDIMD»
+
+on appendFieldsToConfig(configLines, questionLabels, elementTypes)
+	repeat with i from 1 to count of questionLabels
+		set fieldName to "field" & i
+		set elementType to item i of elementTypes
+		set questionLabel to item i of questionLabels
+		copy (fieldName & ".type = " & elementType) to the end of configLines
+		copy (fieldName & ".label = " & questionLabel) to the end of configLines
+		if elementType starts with "mandatory " then
+			copy (fieldName & ".mandatory = 1") to the end of configLines
+		end if
+	end repeat
+end appendFieldsToConfig
+
+on inferElementTypes(questionLabels as list)
+	set inferedElementTypes to {}
+	repeat with questionLabel in questionLabels
+		if class of questionLabel is boolean then
+			copy "checkbox" to the end of inferedElementTypes
+		else if class of questionLabel is date then
+			copy "date" to the end of inferedElementTypes
+		else
+			copy "textfield" to the end of inferedElementTypes
+		end if
+	end repeat
+	return inferedElementTypes
+end inferElementTypes
 
 -- Private handlers ---------------------------------------------------------------------
-
-to split_string(aString as text, delimiter as text)
-	local sourceString, res
-	if aString is "" then return {} --special case
-	set the sourceList to current application's NSString's stringWithString:aString
-	set res to sourceList's componentsSeparatedByString:delimiter
-	return res as list
-end split_string
-
 
 --| Parses Pashua's output to a AppleScript record
 on ini_to_record(ini_lines as list)
@@ -106,6 +140,34 @@ on get_pashua_path()
 		error "Can't locate the path of Pashua.app. Download it from http://www.bluem.net/files/Pashua.dmg and save it in the 'Applications' folder." number 1002
 	end try
 end get_pashua_path
+
+--| Utilities
+
+to join_list(aList as list, delimiter as text)
+	local sourceList, res
+	set the sourceList to current application's NSArray's arrayWithArray:aList
+	set res to sourceList's componentsJoinedByString:delimiter
+	return res as text
+end join_list
+
+to split_string(aString as text, delimiter as text)
+	local sourceString, res
+	if aString is "" then return {} --special case
+	set the sourceList to current application's NSString's stringWithString:aString
+	set res to sourceList's componentsSeparatedByString:delimiter
+	return res as list
+end split_string
+
+on replace_text(searchString as text, replacementString as text, sourceText)
+	local sourceString, adjustedString
+	if sourceText is missing value then
+		return sourceText
+	end if
+	set the sourceString to current application's NSString's stringWithString:sourceText
+	set the adjustedString to the sourceString's stringByReplacingOccurrencesOfString:searchString withString:replacementString
+	return adjustedString as text
+end replace_text
+
 
 --| Executes a shell command, and logs before and after
 on do_shell_with_log(title, command)

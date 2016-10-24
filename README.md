@@ -45,3 +45,9 @@ Feature requests voor Pashua
 * Localizen voor NL (voorstellen)
 * Number input (voor huisnummers)
 * Detecteren als er op cancel gedrukt is (bijv. door een exit-code)
+
+bugs:
+
+* die dubbele focus als een formulier geopend wordt
+* documentatie: `default` wordt bij combobox niet genoemd
+

@@ -1,0 +1,60 @@
+display dialog:text 
+Element type: 
+* text (alleen bovenaan)
+
+[with icon:text or integer] 
+[with icon:stop/‌note/‌caution] 
+[with icon:file] 
+* image (alleen bovenaan)
+
+
+[default answer:text] 
+[hidden answer:boolean] > password
+* text > textfield, textbox, password, combobox(waar komen de items vandaan?)
+* boolean > checkbox
+* date > date(hoe met date/time om te gaan)
+* number:integer/real
+* list > popup, radiobutton
+* record
+* file/alias > openbrowser/savebrowser
+* RGB color
+* script
+
+Element type: 
+* checkbox < boolean
+* combobox < text
+* popup < list
+* radiobutton < list
+
+* date > date
+
+* openbrowser < file/alias
+* savebrowser < file
+
+* password < text
+* textbox < text
+* textfield < text
+
+
+
+[buttons:list of text] 
+[default button:text or integer] 
+[cancel button:text or integer] 
+
+Element type: 
+* button
+* cancelbutton
+* defaultbutton
+
+
+
+Window attributes
+[with title:text] 
+[giving up after:integer] 
+
+
+
+ 
+
+
+

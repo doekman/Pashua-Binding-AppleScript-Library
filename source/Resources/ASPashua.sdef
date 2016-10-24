@@ -2,6 +2,43 @@
 <!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
 <dictionary title="Pashua">
 	<suite name="Pashua" code="PASH" description="Library for working with Pashua forms.">
+		<enumeration name="element type" code="ELTT" description="what element type to display. Some have a mandatory variant.">
+			<enumerator name="checkbox" code="EChk"/>
+			<!--
+			<enumerator name="combobox" code="ECmb"/>
+			<enumerator name="mandatory combobox" code="MCmb"/>
+      -->
+			<enumerator name="date" code="EDte"/>
+			<enumerator name="time" code="ETme"/>
+			<enumerator name="datetime" code="EDte"/>
+			<!--
+			<enumerator name="openbrowser" code="EOpb"/>
+			<enumerator name="mandatory openbrowser" code="MOpb"/>
+      -->
+			<enumerator name="password" code="EPwd"/>
+			<enumerator name="mandatory password" code="MPwd"/>
+			<!--
+			<enumerator name="popup" code="EPup"/>
+			<enumerator name="mandatory popup" code="MPup"/>
+			<enumerator name="radiobutton" code="ERdo"/>
+			<enumerator name="mandatory radiobutton" code="MRdo"/>
+			<enumerator name="savebrowser" code="ESvb"/>
+			<enumerator name="mandatory savebrowser" code="MSvb"/>
+      -->
+			<enumerator name="textbox" code="ETbx"/>
+			<enumerator name="mandatory textbox" code="MTbx"/>
+			<enumerator name="textfield" code="ETfd"/>
+			<enumerator name="mandatory textfield" code="MTfd"/>
+		</enumeration>
+		<!--
+		<record-type name="dialog reply" code="Dgry" description="Reply record for the ‘display multi dialog’ command">
+			<property name="button returned" code="Btnr" description="name of button chosen (empty if ‘giving up after’ was supplied and dialog timed out)" type="text" access="r"/>
+			<property name="values returned" code="Vlsd" description="values entered (present only if ‘default answer’ was supplied)" access="r">
+				<type type="any" list="yes"/>
+			</property>
+			<property name="gave up" code="Gvup" description="Did the dialog time out? (present only if ‘giving up after’ was supplied)" type="boolean" access="r"/>
+		</record-type>
+    -->
 		<command name="display pashua dialog" code="PASHDIDI" description="Display a Pashua dialog">
 			<direct-parameter description="The configuration string or file, that describes the Pashua dialog.">
 				<type type="text"/>
@@ -10,7 +47,44 @@
 			<result description="The dialog result, parsed as an AppleScript record. When the user cancels the dialog, an error is raised (number -128, User canceled). An error will also be raised when Pashua.app can&apos;t parse the config (number 1001)." type="record"/>
 		</command>
 		<command name="custom pashua location" code="PASHCMPL" description="Used to set a custom location of the Pashua.app">
-			<direct-parameter description="The alias pointing to the Pashua.app package." type="file"/>
+			<direct-parameter description="The alias pointing to the Pashua.app package.">
+				<type type="boolean" list="yes"/>
+				<type type="date" list="yes"/>
+			</direct-parameter>
+		</command>
+		<command name="display multi dialog" code="PASHDIMD" description="Display a Pashua dialog box, with multiple inputs">
+			<direct-parameter description="the optional text to start the dialog box with" type="text"/>
+			<parameter name="question labels" code="Qsnl" description="The labels to display for the questions" optional="yes">
+				<type type="text" list="yes"/>
+			</parameter>
+			<!--
+			<parameter name="default answers" code="Dfta" description="the default editable answers. Controls can be infered from type (expected: text, boolean, date, file, alias), but for more control, use «element types»" optional="yes">
+				<type type="any" list="yes"/>
+			</parameter>
+			<parameter name="element types" code="Eltt" description="specify what controls to use" optional="yes">
+				<type type="element type" list="yes"/>
+			</parameter>
+			<parameter name="options" code="Opts" description="for each of the combobox, popup or radiobutton, specify one item in the list. The options can be specified by a comma-seperated text, or by a list of text.">
+				<type type="list of text" list="yes"/>
+			</parameter>
+			<parameter name="buttons" code="Btns" description="a list of up to three button names" optional="yes">
+				<type type="text" list="yes"/>
+			</parameter>
+			<parameter name="default button" code="Dbtn" description="the name or number of the default button" optional="yes">
+				<type type="text"/>
+				<type type="integer"/>
+			</parameter>
+			<parameter name="cancel button" code="Cbtn" description="the name or number of the cancel button" optional="yes">
+				<type type="text"/>
+				<type type="integer"/>
+			</parameter>
+      -->
+			<parameter name="with title" code="Wttl" description="the dialog window title" type="text" optional="yes"/>
+			<!--
+			<parameter name="giving up after" code="Ggua" description="number of seconds to wait before automatically dismissing the dialog" type="integer" optional="yes"/>
+			<result description="Reply record for the ‘display multi dialog’ command" type="dialog reply"/>
+      -->
+			<result description="Temporary result type" type="record"/>
 		</command>
 	</suite>
 </dictionary>
