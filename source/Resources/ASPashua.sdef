@@ -10,7 +10,7 @@
       -->
 			<enumerator name="date" code="EDte"/>
 			<enumerator name="time" code="ETme"/>
-			<enumerator name="datetime" code="EDte"/>
+			<enumerator name="datetime" code="EDtm"/>
 			<!--
 			<enumerator name="openbrowser" code="EOpb"/>
 			<enumerator name="mandatory openbrowser" code="MOpb"/>
@@ -57,13 +57,13 @@
 			<parameter name="question labels" code="Qsnl" description="The labels to display for the questions" optional="yes">
 				<type type="text" list="yes"/>
 			</parameter>
-			<!--
 			<parameter name="default answers" code="Dfta" description="the default editable answers. Controls can be infered from type (expected: text, boolean, date, file, alias), but for more control, use «element types»" optional="yes">
 				<type type="any" list="yes"/>
 			</parameter>
 			<parameter name="element types" code="Eltt" description="specify what controls to use" optional="yes">
 				<type type="element type" list="yes"/>
 			</parameter>
+			<!--
 			<parameter name="options" code="Opts" description="for each of the combobox, popup or radiobutton, specify one item in the list. The options can be specified by a comma-seperated text, or by a list of text.">
 				<type type="list of text" list="yes"/>
 			</parameter>

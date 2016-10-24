@@ -51,44 +51,76 @@ on «event PASHDIDI» config
 end «event PASHDIDI»
 
 --| display multi dialog
-on «event PASHDIMD» introductionText given «class Qsnl»:questionLabels : missing value, «class Wttl»:titleText : missing value
+on «event PASHDIMD» introductionText given «class Qsnl»:questionLabels : missing value, «class Dfta»:defaultAnswers : missing value, «class Eltt»:elementTypes : missing value, «class Wttl»:titleText : missing value
 	set configLines to {}
-	if introductionText is not missing value then
-		set configLines to configLines & {"intro.type = text", "intro.text = " & replace_text(linefeed, "[return]", introductionText)}
+	if titleText is not missing value then set configLines to configLines & {"*.title = " & titleText}
+	if introductionText is not missing value and introductionText ≠ "" then set configLines to configLines & {"intro.type = text", "intro.text = " & replace_text(linefeed, "[return]", introductionText)}
+	if questionLabels is not missing value or defaultAnswers is not missing value or elementTypes is not missing value then
+		# we need to create some input fields
+		if elementTypes is missing value then
+			if defaultAnswers is missing value then
+				set elementTypes to inferElementTypes(questionLabels)
+			else
+				set elementTypes to inferElementTypes(defaultAnswers)
+			end if
+		end if
+		appendFieldsToConfig(configLines, questionLabels, defaultAnswers, elementTypes)
 	end if
-	if questionLabels is missing value then
-		set questionLabels to {}
-	end if
-	if titleText is not missing value then
-		set configLines to configLines & {"*.title = " & titleText}
-	end if
-	set inferedElementTypes to inferElementTypes(questionLabels)
-	appendFieldsToConfig(configLines, questionLabels, inferedElementTypes)
-	return «event PASHDIDI» join_list(configLines, linefeed)
+	set config to join_list(configLines, linefeed)
+	display dialog "This is the generated config" default answer config
+	return «event PASHDIDI» config
 end «event PASHDIMD»
 
-on appendFieldsToConfig(configLines, questionLabels, elementTypes)
-	repeat with i from 1 to count of questionLabels
+on appendFieldsToConfig(configLines, questionLabels, defaultAnswers, elementTypes)
+	set codeToType to {EChk:"checkbox", EDte:"date", ETme:"date", EDtm:"date", EPwd:"password", MPwd:"password", ETbx:"textbox", MTbx:"textbox", ETfd:"textfield", MTfd:"textfield"}
+	set the codeToTypeDict to current application's NSDictionary's dictionaryWithDictionary:codeToType
+	repeat with i from 1 to count of elementTypes
 		set fieldName to "field" & i
 		set elementType to item i of elementTypes
-		set questionLabel to item i of questionLabels
-		copy (fieldName & ".type = " & elementType) to the end of configLines
-		copy (fieldName & ".label = " & questionLabel) to the end of configLines
-		if elementType starts with "mandatory " then
+		set elementCode to text 8 thru 11 of (elementType as text) #«class xxxx»
+		set elementValue to (codeToTypeDict's valueForKey:elementCode)
+		set pashuaType to elementValue as text
+		copy (fieldName & ".type = " & pashuaType) to the end of configLines
+		if elementCode starts with "M " then
 			copy (fieldName & ".mandatory = 1") to the end of configLines
+		end if
+		if pashuaType is "date" then
+			copy (fieldName & ".textual = 1") to the end of configLines
+			if elementCode is "EDtm" then --datetime
+				copy (fieldName & ".time = 1") to the end of configLines
+			end if
+			if elementCode is "ETme" then --time
+				copy (fieldName & ".date = 0") to the end of configLines
+				copy (fieldName & ".time = 1") to the end of configLines
+			end if
+		end if
+		if questionLabels is not missing value then
+			set questionLabel to item i of questionLabels
+			copy (fieldName & ".label = " & questionLabel) to the end of configLines
+		else if pashuaType is "checkbox" then
+			copy (fieldName & ".label = " & fieldName) to the end of configLines
+		end if
+		if defaultAnswers is not missing value then
+			set defaultAnswer to item i of defaultAnswers
+			--TODO: convert to text in right format
+			copy (fieldName & ".default = " & defaultAnswer) to the end of configLines
 		end if
 	end repeat
 end appendFieldsToConfig
 
-on inferElementTypes(questionLabels as list)
+on inferElementTypes(fieldValues as list)
 	set inferedElementTypes to {}
-	repeat with questionLabel in questionLabels
-		if class of questionLabel is boolean then
-			copy "checkbox" to the end of inferedElementTypes
-		else if class of questionLabel is date then
-			copy "date" to the end of inferedElementTypes
+	repeat with fieldValue in fieldValues
+		if class of fieldValue is boolean then
+			copy «class EChk» to the end of inferedElementTypes #checkbox
+		else if class of fieldValue is date then
+			if time of fieldValue is 0 then
+				copy «class EDte» to the end of inferedElementTypes #date
+			else
+				copy «class EDtm» to the end of inferedElementTypes #datetime
+			end if
 		else
-			copy "textfield" to the end of inferedElementTypes
+			copy «class ETfd» to the end of inferedElementTypes #textfield
 		end if
 	end repeat
 	return inferedElementTypes
